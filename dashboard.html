@@ -602,8 +602,9 @@ let countdownIntervals = {};
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     if (!sessionToken) {
-        window.location.href = '/partner-login.html'; 
-        return;
+        alert('wtf no sessiontoken set!!??');
+        //window.location.href = '/partner-login.html'; 
+        //return;
     }
 
     initializeEventListeners();
