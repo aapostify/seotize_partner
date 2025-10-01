@@ -622,7 +622,7 @@ let countdownIntervals = {};
 document.addEventListener('DOMContentLoaded', () => {
     if (!sessionToken) {
         alert('wtf no sessiontoken set!!??');
-        //window.location.href = '/partner-login.html'; 
+        //window.location.href = '/login'; 
         //return;
     }
 
@@ -1107,7 +1107,7 @@ function showModal(title, content, width = '600px') {
 async function logout() {
     document.cookie = 'session_token_partner=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
     localStorage.removeItem('partnerAuthToken');
-    window.location.href = '/partner-login.html';
+    window.location.href = '/login';
 }
 </script>
 </body>
