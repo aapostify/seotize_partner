@@ -7,7 +7,8 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet">
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"></script>
 
@@ -582,6 +583,24 @@ tr:hover { background: var(--card-hover); }
 </div>
 
 <script>
+    function getBrowserData() {
+    var userAgent = navigator.userAgent;
+    var language = navigator.language;
+    var platform = navigator.platform;
+    var screenResolution = screen.width + 'x' + screen.height;
+    var combinedData = `${userAgent}|${language}|${platform}|${screenResolution}`;
+    return combinedData;
+}
+
+function hashData(data) {
+    return CryptoJS.MD5(data).toString();
+}
+
+function getUniqueId() {
+    var browserData = getBrowserData();
+    return hashData(browserData);
+}
+    
 // API Configuration
 const API_BASE = 'https://api.seotize.net';
 let sessionToken = getCookie('session_token_partner') || localStorage.getItem('partnerAuthToken');
@@ -806,7 +825,7 @@ function renderTaskCard(task) {
 
 async function initiateTask(userTaskId) {
     try {
-        const uniqueId = uuid.v4(); // Corrected syntax
+        const uniqueId = getUniqueId();
         await api('/allocate-partner-task', {
             method: 'POST',
             body: JSON.stringify({ user_task_id: userTaskId, unique_id: uniqueId })
