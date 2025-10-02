@@ -621,9 +621,7 @@ let countdownIntervals = {};
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     if (!sessionToken) {
-        alert('wtf no sessiontoken set!!??');
-        //window.location.href = '/login'; 
-        //return;
+        logout();
     }
 
     initializeEventListeners();
