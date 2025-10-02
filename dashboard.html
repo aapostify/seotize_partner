@@ -622,6 +622,7 @@ let countdownIntervals = {};
 document.addEventListener('DOMContentLoaded', () => {
     if (!sessionToken) {
         logout();
+        return;
     }
 
     initializeEventListeners();
