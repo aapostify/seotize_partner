@@ -1135,9 +1135,10 @@ function showModal(title, content, width = '600px') {
     document.getElementById('modalOverlay').classList.add('active');
 }
 async function logout() {
-    document.cookie = 'session_token_partner=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    localStorage.removeItem('partnerAuthToken');
-    window.location.href = '/login';
+    // We now specify the DOMAIN to ensure the correct cookie is deleted.
+    document.cookie = 'session_token_partner=;path=/;domain=.seotize.net;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    localStorage.removeItem('partnerAuthToken');
+    window.location.href = '/login';
 }
 </script>
 </body>
