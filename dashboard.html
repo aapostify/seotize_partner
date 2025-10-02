@@ -721,9 +721,17 @@ async function loadPartnerDashboard(page = 1) {
 }
 
 function renderIncompleteTaskView(task) {
+    // 1. Randomly pick one keyword from the task's list.
+    const randomKeyword = task.keywords && task.keywords.length > 0
+        ? task.keywords[Math.floor(Math.random() * task.keywords.length)]
+        : '';
+
+    // 2. Clean the URL to make it suitable for Google's "site:" search operator.
+    const searchSite = task.url.replace(/(^\w+:|^)\/\//, '').replace(/^www\./, '');
+
     document.getElementById('content').innerHTML = `
         <div class="stats-grid">
-             <div class="stat-card">
+            <div class="stat-card">
                 <div class="stat-icon primary"><i class="ri-wallet-3-line"></i></div>
                 <div>
                     <div class="stat-value">$${(currentData.user?.credit || 0).toFixed(2)}</div>
@@ -738,19 +746,41 @@ function renderIncompleteTaskView(task) {
                 </div>
             </div>
         </div>
-        <div class="inprogress-task-view">
-            <i class="ri-time-line" style="font-size: 3rem; color: var(--warning); margin-bottom: 1rem;"></i>
-            <h3>You have a task in progress!</h3>
-            <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 1.5rem;">Please complete or cancel your current task before starting a new one.</p>
-            <div class="card" style="text-align: left; max-width: 600px; margin: 0 auto 2rem;">
-                <div class="card-body">
-                    <div style="margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.875rem;">URL:</div>
-                    <a href="${task.url}" target="_blank" class="task-url">${task.url}</a>
-                </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="ri-information-line"></i> How to Complete Your Task
+                </h3>
             </div>
-            <div style="display: flex; justify-content: center; gap: 1rem;">
-                <button class="btn btn-secondary" onclick="cancelInProgressTask('${task._id}')"><i class="ri-close-circle-line"></i> Cancel Task</button>
-                <button class="btn btn-primary" onclick="renderDoTaskView()"><i class="ri-play-circle-line"></i> Complete Task</button>
+            <div class="card-body">
+                <p style="color: var(--text-secondary); text-align: center; margin-bottom: 2rem;">
+                    Follow these steps carefully to earn your reward.
+                </p>
+
+                <div style="background: var(--bg-tertiary); padding: 1.5rem; border-radius: var(--radius-lg); text-align: left;">
+                    <h4 style="margin-bottom: 1rem;">Your Instructions:</h4>
+                    <ol style="padding-left: 1.5rem; line-height: 2;">
+                        <li>On this <strong>same device</strong>, open a new browser tab and go to <strong>Google.com</strong>.</li>
+                        <li>
+                            Copy the text below and paste it into the Google search bar:
+                            <div style="background: var(--bg); padding: 0.75rem 1rem; border-radius: var(--radius); margin: 0.75rem 0; font-family: monospace; font-size: 1rem; user-select: all; word-break: break-all;">
+                                site:${searchSite} ${randomKeyword}
+                            </div>
+                        </li>
+                        <li>From the search results, find and click the link for <strong>${task.url}</strong>.</li>
+                        <li>Wait for the website to fully load. A special popup will appear with further instructions.</li>
+                        <li>Click on all the "coins" that appear on the page as directed by the popup.</li>
+                        <li>Once all coins are collected, you will be <strong>automatically redirected back here</strong> to see your updated balance. ✅</li>
+                    </ol>
+                </div>
+
+                <div style="text-align: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">If you don't want to complete this task, you can cancel it.</p>
+                    <button class="btn btn-danger" onclick="cancelInProgressTask('${task._id}')">
+                        <i class="ri-close-circle-line"></i> Cancel & Forfeit Reward
+                    </button>
+                </div>
             </div>
         </div>
     `;
